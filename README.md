@@ -90,10 +90,6 @@ I designed the workflow, the approval and safety rules, the Hebrew hook library 
 
 In daily use. Drafts, profile edits and posts all go through the approval card.
 
-## Credits
-
-The list of Hebrew AI-writing patterns was informed by the open-source *humanizer-semitic* project (MIT).
-
 ---
 
 <div align="center">
