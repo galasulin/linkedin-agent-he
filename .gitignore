@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*.clean.txt
+draft.txt
+final.txt
+voice-he.md
+log-he.md
+.env
