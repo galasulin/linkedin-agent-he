@@ -14,6 +14,10 @@
 
 🇮🇱 [**גרסה עברית**](README.he.md)
 
+<a href="https://galasulin.github.io/linkedin-agent-he/"><img src="docs/assets/demo.gif" alt="Interactive demo: idea, 3 hooks, draft, humanizer, score, approval card, mock post" width="860"></a>
+
+**[▶ Live demo](https://galasulin.github.io/linkedin-agent-he/)** · a step-through of the whole flow with a fictional post and the real output of `he_check.py`
+
 </div>
 
 ---

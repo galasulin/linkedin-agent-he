@@ -12,6 +12,10 @@
 
 🇬🇧 [**English version**](README.md)
 
+<a href="https://galasulin.github.io/linkedin-agent-he/"><img src="docs/assets/demo.gif" alt="דמו אינטראקטיבי: רעיון, 3 פתיחות, טיוטה, humanizer, ציון, כרטיס אישור והדמיית פוסט" width="860"></a>
+
+**[▶ Live demo](https://galasulin.github.io/linkedin-agent-he/)** · מעבר צעד-אחר-צעד על כל התהליך, עם פוסט בדיוני ופלט אמיתי של `he_check.py`
+
 </div>
 
 ---
