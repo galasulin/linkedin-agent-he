@@ -45,7 +45,7 @@
 </tr>
 <tr>
 <td><a href="docs/assets/demo-4.png"><img src="docs/assets/demo-4.png" width="100%"></a><br><sub><b>כרטיס אישור</b> · חסום כל עוד נשאר placeholder של <code>{{</code></sub></td>
-<td><a href="docs/assets/demo-5.png"><img src="docs/assets/demo-5.png" width="100%"></a><br><sub><b>פורסם</b> · הדמיית פוסט, אימות אחד בפיד הפעילות (ממשק באנגלית)</sub></td>
+<td><a href="docs/assets/demo-5.png"><img src="docs/assets/demo-5.png" width="100%"></a><br><sub><b>פורסם</b> · הדמיית פוסט, אימות אחד בפיד הפעילות</sub></td>
 <td><a href="docs/assets/demo-6.png"><img src="docs/assets/demo-6.png" width="100%"></a><br><sub><b>מובייל</b> · הדמו ברוחב טלפון, מימין לשמאל</sub></td>
 </tr>
 </table>

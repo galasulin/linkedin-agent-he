@@ -43,7 +43,7 @@
 </tr>
 <tr>
 <td><a href="docs/assets/demo-4.png"><img src="docs/assets/demo-4.png" width="100%"></a><br><sub><b>Approval card</b> · blocked while a <code>{{</code> placeholder is left</sub></td>
-<td><a href="docs/assets/demo-5.png"><img src="docs/assets/demo-5.png" width="100%"></a><br><sub><b>Published</b> · mock post, verified once on the activity feed (English UI)</sub></td>
+<td><a href="docs/assets/demo-5.png"><img src="docs/assets/demo-5.png" width="100%"></a><br><sub><b>Published</b> · mock post, verified once on the activity feed</sub></td>
 <td><a href="docs/assets/demo-6.png"><img src="docs/assets/demo-6.png" width="100%"></a><br><sub><b>Mobile</b> · the demo at phone width, RTL</sub></td>
 </tr>
 </table>
