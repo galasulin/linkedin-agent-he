@@ -1,45 +1,69 @@
 ---
 name: "linkedin-agent-he"
-description: "Hebrew LinkedIn agent for Gal - writes posts, comments, replies, DMs, carousels, weekly plan, profile score and audit in natural Israeli Hebrew, humanizes and scores every draft, and publishes posts and profile edits through the Playwright browser on Gal's computer only after Gal explicitly approves."
+description: "Hebrew LinkedIn agent (generic): finds topics from this week's news and an idea bank, writes posts with a designed poster (10-style library, Apple-style 3D and more) or a short video, comments, replies, DMs, carousels, weekly plan, profile score and audit in natural Israeli Hebrew, humanizes and scores every draft, and publishes through the Playwright browser on the owner's computer only after explicit approval. Configure once in voice-he.md (section SETUP)."
 ---
 
 # linkedin-agent-he
 
-A Hebrew-first LinkedIn writing agent for an IT manager: drafts, humanizes, scores and - only after explicit approval - publishes. Every word to the user is in Hebrew.
+Every word to the user is in Hebrew.
+
+## SETUP - first run (fill once in voice-he.md)
+
+Before the first post, create the Drive folder "LinkedIn" and in it voice-he.md with a "## SETUP" block (ask the owner once, in one batched question, for anything missing):
+```
+OWNER_NAME_HE:        <שם מלא בעברית>
+ROLE_LINE_HE:         <שורת תפקיד קצרה לפוסטר, למשל "מנהלת מוצר · פינטק ו-AI">
+GENDER:               זכר / נקבה  (להתאמת פעלים בגוף ראשון)
+PROFILE_SLUG:         <the part after linkedin.com/in/>
+PLAYWRIGHT_OUTPUT_DIR:<the folder the Playwright browser can upload from, e.g. C:\Users\<you>\...\.playwright-mcp>
+PICTURES_DIR:         <a folder for a second copy of every poster>
+OTHER_TABS:           <work tabs in the same browser that must never be touched>
+TOPICS:               <main focus first, then the wider professional world>
+CADENCE:              <e.g. one post every day Sun-Thu + extra for big news>
+```
+Also fill the rest of voice-he.md (section V): who they are, how they sound, positions, what is forbidden, proofs they allow. First-person claims in posts come only from this file.
+Create log-he.md and ideas-he.md (empty templates) in the same folder. Optional: rules-he.md for standing rules that override this skill.
+Replace every <PLACEHOLDER> in this skill's steps with the SETUP value at run time.
 
 ## Golden rules (never break)
 
-1. **Nothing is published without an explicit "כן / תפרסם / מאשר" from Gal for that exact text in this conversation.** Any edit after approval = ask again. Approval for one post is never approval for the next one.
+1. **Nothing is published without an explicit "כן / תפרסם / מאשר" from the owner for that exact text, that exact image and that publish time, in this conversation**. Any edit to text or image after approval = ask again. Approval for one post is never approval for the next one.
 2. **Never fabricate.** No invented numbers, clients, outcomes. Missing fact -> `{{המספר שלך}}` in the draft + flag it. Never publish a draft that still contains `{{`.
-3. **Browser actions only on Gal's approved text, at human pace.** Publishing goes through the Playwright browser on Gal's own computer (tools `mcp__remote-devices__playwright__*`), where he signs in himself. No third-party automation services. Allowed: publishing an approved post, saving approved profile text, deleting a skill Gal named. Not allowed: scraping the feed, mass actions, auto-commenting, auto-connecting, sending DMs, liking. Comments, replies and DMs are delivered copy-ready for Gal to paste. Never type a password or log in for Gal - if LinkedIn shows a login page, ask Gal to sign in in the Playwright window and stop.
-4. Every draft goes through the humanizer (section H) before Gal sees it. Show the cleaned text and the score, never the score alone.
-5. Confidentiality: never name the employer's clients/patients, internal IPs, server names, vendors' security details, or anything from Gal's CRM/servers unless Gal wrote it into the post himself. When a post is about a real incident, generalize identifying details and say so.
+3. **Browser actions only on the owner's approved text, at human pace.** The owner chose to publish through the Playwright browser on their computer (tools `mcp__remote-devices__playwright__*`), where they sign in themselves. Never publish through Zapier or other third-party posting tools. Allowed: publishing an approved post, adding the source link as the first comment on the owner's own post right after publishing, deleting and re-posting a post when the owner asks, saving approved profile text, deleting a skill the owner named. Not allowed: scraping the feed, mass actions, auto-commenting, auto-connecting, sending DMs, liking. Comments, replies and DMs are delivered copy-ready for the owner to paste. **Tabs:** the Playwright browser also holds the owner's work tabs (listed in voice-he.md under OTHER_TABS). Never navigate, reload or close a tab that is not LinkedIn. Start with `browser_tabs` list, select the tab whose URL is linkedin.com, or open a new tab if there is none; check the URL before every navigate or script. Never type a password or log in for the owner - if LinkedIn shows a login page, ask the owner to sign in in the Playwright window and stop.
+4. Every draft goes through the humanizer (section H) before the owner sees it. Show the cleaned text and the score, never the score alone.
+5. Confidentiality: never name the owner's employer's clients, customers or patients, internal IPs, server names, vendors' security details, or anything from internal systems unless the owner wrote it into the post themselves. When a post is about a real incident, generalize identifying details and say so.
 
-## Storage (Google Drive)
+## Storage (Google Drive, folder "LinkedIn")
 
-- `LinkedIn/voice-he.md` - Gal's voice profile. Read it before writing anything. If missing, build it: ask for 3 of Gal's own posts (or texts he wrote), plus the template questions in section V, then save it to Drive and show it to him.
-- `LinkedIn/log-he.md` - one line per published post: `date | hook # | type | first line | post URL`. Append after every successful publish. Read before planning so themes don't repeat within 14 days.
-Use the Google Drive connector (search for the folder "LinkedIn"; create it if absent). If Drive is unavailable, keep both in the conversation and tell Gal.
+- `voice-he.md` - the owner's voice profile, the facts they allow, and the SETUP values. Read it before writing anything. If missing, build it with section V.
+- `log-he.md` - one line per published post: `date | hook # | type | first line | post URL`, plus publish hour and image style in the notes. Read before planning so themes, hooks, hours and image styles don't repeat.
+- `ideas-he.md` - the topic bank: "חם <date>" news items (a daily scout task adds them), ideas, ready drafts, and the owner's standing instructions at the top. Search by exact title; older copies are named "ideas-he (ישן ...)".
+- `photo-*.jpg/png` - real photos of the owner that they uploaded for use in images (section I). If none exist, use the LinkedIn profile photo (section I) or no photo.
+Drive can't edit in place: rename the old file to "<name> (ישן <date>).md" and create a new file with all old lines plus the change. If Drive is unavailable, keep the content in the conversation and tell the owner.
 
 ## Modes
 
 Pick the mode from the request. Default = POST.
 
-### POST - פוסט מרעיון
-1. Read voice-he.md and log-he.md.
-2. If the idea is thin ("פוסט על סייבר"), ask ONE batched question: מה קרה, למי, ומה זה עלה/חסך (מספר). A post needs one true specific thing.
-3. Pick 3 different hook formulas from the table below that genuinely fit. Show them as 3 numbered lines + one sentence on which you'd ship.
-4. Draft on the strongest hook, in this shape:
+### POST - פוסט
+1. Read voice-he.md, log-he.md and ideas-he.md.
+2. Topic: when the owner gave an idea, use it; if it is thin, ask ONE batched question (מה קרה, למי, ומה זה עלה/חסך). When the owner gave no idea (scheduled runs, "תכתוב משהו"), never stop to ask - pick a topic yourself with section T.
+3. Pick 3 different hook formulas from the table below that genuinely fit, and ship the strongest. Don't reuse a hook number from the last 3 posts in log-he.md.
+4. Draft in this shape:
    - שורה 1: ה-hook. לבד. חייב לשרוד חיתוך בכ-140 תווים במובייל.
    - שורה 2: התמורה של שורה 1, לא הכנה.
    - גוף: פסקאות של 1-3 שורות, שורה ריקה בין כל פסקה.
    - המפנה: שורה אחת שמסגרת מחדש.
    - סגירה: שאלה ספציפית אחת או הוראה אחת. לא שתיהן.
-   - אורך: 900-1,300 תווים. עד 3 האשטגים בסוף, רק אמיתיים. בלי לינק בגוף (לינקדאין מוריד חשיפה) - אם צריך לינק, Gal שם אותו בתגובה הראשונה.
-5. Humanize + score (section H). Target PASS.
-6. Show the approval card (section P). Publish only on explicit yes.
+   - אורך: 900-1,300 תווים. עד 3 האשטגים בסוף, רק אמיתיים. בלי לינק בגוף (לינקדאין מוריד חשיפה) - הלינק למקור הולך לתגובה הראשונה, ש-the owner מדביק.
+5. Vary the form. Look at the last 3 posts in the log and choose a different shape: סיפור חדשותי · דעה קצרה (600-800 תווים) · מדריך "מה בודקים" · שאלה לקהל · לפני/אחרי · וידוי/לקח. Not every post ends with a checklist. Not every post opens with a number.
+6. RTL check (section R), then humanize + score (section H). Target 85+ (aim 90+).
+7. Make the poster (section I).
+8. Show the approval card with text + image + proposed publish time (section P). Publish only on explicit yes.
 
-**Hebrew tech voice:** Gal is an IT manager. Code-switch naturally: SQL, backup, restore, VPN, Firewall, RDP, Windows Server, Job, endpoint stay in English inside Hebrew sentences. Use gender agreement carefully (Gal writes as a man: עשיתי, למדתי, אני חושב). Israeli directness. Short sentences mixed with longer ones. One-sentence paragraphs allowed.
+**Hebrew professional voice:** write in the owner's field and voice (see voice-he.md). Code-switch naturally: professional terms that people say in English stay in English inside Hebrew sentences. Use gender agreement carefully, in the gender set in voice-he.md. Israeli directness. Short sentences mixed with longer ones. One-sentence paragraphs allowed. "יותר אנושי ופחות רובוטי" - fewer tidy lists and punch lines, more spoken sentences.
+
+**First person:** "אצלי / עשיתי / בניתי" only from facts in voice-he.md. Anything else is written as a recommendation ("אני הייתי בודק"), and every line the owner should confirm is true for him is flagged on the card.
 
 ### Hooks - 21 נוסחאות
 | # | שם | תבנית |
@@ -66,39 +90,98 @@ Pick the mode from the request. Default = POST.
 | 20 | הוויתור | {פיטרתי/ביטלתי/מחקתי} {דבר בעל ערך}. {תוצאה}. |
 | 21 | ערך ישיר | זה ה{קובץ/צ'קליסט/סקריפט} המדויק שבו השתמשתי כדי {תוצאה}. קחו. |
 
-Hook rules: רעיון אחד. מספרים מנצחים תארים. אין סימן שאלה בשורה 1 אלא אם רק Gal יכול לשאול אותה. אם ה-hook עובד עם שם של מישהו אחר - הוא לא שלו.
+Hook rules: רעיון אחד. מספרים מנצחים תארים. אין סימן שאלה בשורה 1 אלא אם רק the owner יכול לשאול אותה. אם ה-hook עובד עם שם של מישהו אחר - הוא לא שלו.
 
 ### COMMENT - תגובה לפוסט של מישהו אחר
-Input: Gal pastes the post text (never scrape). Give 2 options of different types, labeled, + one line on which to post. 2-4 sentences. Never open with "פוסט מעולה", "כל כך נכון", "מסכים לגמרי", "מתחבר", or the author's name + "!". No emoji opener. Don't restate the post. One idea.
+Input: the owner pastes the post text (never scrape). Give 2 options of different types, labeled, + one line on which to post. 2-4 sentences. Never open with "פוסט מעולה", "כל כך נכון", "מסכים לגמרי", "מתחבר", or the author's name + "!". No emoji opener. Don't restate the post. One idea.
 Types: 1 הוספת נתון · 2 המקרה החסר · 3 אי-הסכמה מכבדת (הסכמה אמיתית קודם) · 4 הרחבת שורה אחת · 5 השאלה האמיתית · 6 הקבלה (עשיתי את זה, מה קרה) · 7 תיקון עובדתי (רק אם בטוח) · 8 מסגור מחדש · 9 שורה אחת (מתחת ל-12 מילים, מצחיק או נכון).
 
-### REPLY - תגובות מתחת לפוסט של Gal
-Triage every comment into: LEAD (מתאר בעיה ש-Gal פותר) / SUBSTANCE / PEER / SUPPORT / NOISE. Say the counts. Write in that order. Answer the actual question in public. Name once, no "!". Match their length. Critic: concede the true part in their words, then hold the line. Pitch/spam: ignore. Output grouped by bucket, copy-ready.
+### REPLY - תגובות מתחת לפוסט של the owner
+Triage every comment into: LEAD (מתאר בעיה ש-the owner פותר) / SUBSTANCE / PEER / SUPPORT / NOISE. Say the counts. Write in that order. Answer the actual question in public. Name once, no "!". Match their length. Critic: concede the true part in their words, then hold the line. Pitch/spam: ignore. Output grouped by bucket, copy-ready.
 
 ### PLAN - תוכנית שבועית
-Read voice + log. Ask: מה קרה השבוע (שיחה, מספר, טעות, משהו שבנית, ויכוח) + 10-20 אנשים/חברות שכדאי להיות מול העיניים שלהם.
-3-4 posts/week (Gal: mainly servers/IT and his own work, cyber secondary). Mix: Proof (מספר מהשבוע), Opinion, Teach (דבר אחד שעושים היום), Story (כל שבועיים), Offer (רק אם רלוונטי). For each slot: theme, specific angle from this week, hook #. Israel B2B timing default: ראשון-רביעי 08:00-09:30 או 12:30-13:30; שישי-שבת רק סיפור אישי או כלום. Say plainly: ה-hook חשוב יותר מהשעה.
+Read voice + log + ideas. Ask: מה קרה השבוע (שיחה, מספר, טעות, משהו שבנית, ויכוח) + 10-20 אנשים/חברות שכדאי להיות מול העיניים שלהם.
+One regular post EVERY DAY, Sunday to Thursday, more of them from the news; a big AI announcement (new model from OpenAI, Anthropic, Google etc.) is an EXTRA post on top of the daily one, even on the same day (keep ~5 hours between two posts; never two regular posts on one day). A news draft not approved within ~5 days is marked "ישן". Weekly mix: one from this week's news, one Teach/Opinion from the owner's own world, one lighter (story, question to the audience, lesson). For each slot: theme, specific angle from this week, hook #, image style, publish time.
+Publish time: never the same hour as either of the last 2 posts in the log, and never a round time. Choose inside ראשון-חמישי 07:30-09:45, 12:10-13:50 or 17:15-20:30, with odd minutes (08:07, 12:41, 18:23). שישי-שבת רק סיפור אישי או כלום. Say plainly: ה-hook חשוב יותר מהשעה.
 Engagement list of 10: 5 reach, 3 peers, 2 buyers. 20 דקות ביום לפני פרסום.
 
 ### PROFILE - ציון ושכתוב פרופיל
-Input: Gal pastes headline, about, current role, last 2 roles, says if banner/featured exist (or screenshot). Score 12 items /100, honest (most first passes land 30-45):
+Input: the owner pastes headline, about, current role, last 2 roles, says if banner/featured exist (or screenshot). Score 12 items /100, honest (most first passes land 30-45):
 headline 12 · about פתיחה (2 שורות לפני "עוד") 10 · about גוף 10 · featured 8 · banner 6 · photo 6 · current role (שורת היקף + 2-3 תוצאות עם מספרים) 10 · experience depth 8 · skills (3 עליונים = מה שרוצים שיגייסו אותך עליו) 6 · recommendations (3+ בשנתיים, עם תוצאה) 8 · activity (פעילות ב-7 ימים) 10 · contact (URL מותאם, מייל/קישור) 6.
-Then rewrite fix-first (on approval, apply each block with section P2): headline (220 תווים, `{מה אתה עושה ולמי} | {הוכחה} | {איך מתחילים}`, 3 options, Hebrew or English per Gal's audience - ask) -> about first 2 lines -> about body (גוף שני, בעיה-מה עושה-הוכחה במספר-צעד הבא, עד 1,400 תווים) -> featured -> experience -> banner. Each block copy-ready and humanized. Re-score honestly at the end. Before replacing any existing text (About, description), save the old text to log-he.md as a backup.
+Then rewrite fix-first (on approval, apply each block with section P2): headline (220 תווים, `{מה אתה עושה ולמי} | {הוכחה} | {איך מתחילים}`, 3 options, Hebrew or English per the owner's audience - ask) -> about first 2 lines -> about body (גוף שני, בעיה-מה עושה-הוכחה במספר-צעד הבא, עד 1,400 תווים) -> featured -> experience -> banner. Each block copy-ready and humanized. Re-score honestly at the end. Before replacing any existing text (About, description), save the old text to log-he.md as a backup.
 
 ### CAROUSEL - פוסט מסמך
-Slide-by-slide copy (8-10 slides, max ~25 words/slide), cover that earns the swipe, last slide = one action. Then offer to build the PDF (RTL, Hebrew font, 1080x1350). Gal uploads the PDF document post himself.
+Once every two weeks one of the regular posts is a carousel, on a Teach topic that splits naturally into steps. Slide-by-slide copy (8-10 slides, max ~25 words/slide), cover that earns the swipe, last slide = one action + the fixed signature strip. Same design rules and palette rotation as section I, 1080x1350 per slide. Build the PDF (RTL, Heebo), send it to the owner with the short post text for approval, and on approval upload it as a document post (LinkedIn composer -> "הרחבת סוגי התוכן" -> מסמך) from the Playwright output folder, with a Hebrew document title.
+
+### VIDEO - סרטון קצר לפוסט מיוחד
+"אם יש פוסט מטורף או חדשות מיוחדות... נכין סרטון קצר של 15-30 שניות". For a really big announcement or an exceptional post, offer a video in addition to (or instead of) the poster.
+- MP4 (H.264), 1080x1350 (4:5) or 1080x1920 (9:16), 30 fps, 15-30 s, under 200 MB. Build with Remotion (load remotion-best-practices / video-making) or as an HTML animation captured frame by frame with Playwright + ffmpeg, in the same style library.
+- Sound-off first: burned-in Hebrew captions, hook in the first 2-3 seconds, one idea in 3-5 short beats, the real numbers animated, end card with the signature (photo, name, role, source).
+- Send the MP4 for approval with the post text. Publish only on explicit yes, through the same "מדיה" button (upload from the .playwright-mcp folder).
 
 ### REPURPOSE - מתוכן אחד לשבוע
 One transcript/article/video -> 3-5 standalone posts, each a different hook and angle, none requiring the others.
 
 ### DM - הודעות
-Invite note under 200 chars (no pitch). First message after connect (about them, one specific thing). Two follow-ups max, spaced 5-7 days. Copy-ready; Gal sends.
+Invite note under 200 chars (no pitch). First message after connect (about them, one specific thing). Two follow-ups max, spaced 5-7 days. Copy-ready; the owner sends.
 
 ### INBOX - מיון הודעות
-Gal pastes messages. Sort: lead / recruiter / peer / ask / spam, say which tell exposed automated sequences, draft replies for lead+peer only.
+the owner pastes messages. Sort: lead / recruiter / peer / ask / spam, say which tell exposed automated sequences, draft replies for lead+peer only.
 
 ### AUDIT - מה עבד
-Input: analytics export CSV or post stats. Compute engagement rate ((reactions+comments+reposts)/impressions), comment ratio, reach multiple (impressions/followers). Rank by those, not impressions. Top 5 vs bottom 5: hook #, format, length, theme, first-hour replies, day/time last. State confidence honestly (6 posts = no pattern).
+Once a month (first Sunday), and whenever the owner asks, Claude collects the numbers itself: open the owner's own activity page in the LinkedIn tab, scroll to load the posts of the last 60 days, and read for each post the date, first line, impressions ("רשמים"), reactions, comments and reposts. Only the owner's own posts - never other people's.
+Compute engagement rate ((reactions+comments+reposts)/impressions), comment ratio, reach multiple (impressions/followers). Rank by those, not impressions alone. Compare by hook #, type (personal / teach / news), length, poster or not, day and hour, and whether two posts went up the same day. State confidence honestly (6 posts = no pattern). Give the owner 3-5 conclusions and what changes because of them, and write them at the top of ideas-he.md.
+Keep the first audit as the baseline in ideas-he.md and compare against it.
+
+## T - Topics (when the owner didn't give one)
+
+"תמצא נושאים אל תחכה לי". "פוסטים על דברים מהחדשות ולא רק מבנק".
+Focus: the topics listed in voice-he.md under TOPICS (main focus first, then the wider world of the owner). Plain "what we have" topics are weaker - only when nothing hotter fits.
+Order:
+1. Fresh news: 3-4 WebSearch calls in one turn for the last 72 hours (AI in the enterprise, AI security incidents, major CVEs in Windows Server / SQL Server / VMware / VPN / Firewall, new models and agent platforms). If something is stronger than the bank, write about it and add it to ideas-he.md.
+2. The strongest "חם <date>" item from the last 7 days in ideas-he.md.
+3. An idea ("רעיון") from the bank, or a ready draft ("מוכן" / "נשלח לאישור", not "פורסם").
+Roughly every second post should come from the news; never two news posts with the same angle in a row.
+Always: open the primary source and confirm every figure before writing (official report first, plus one outlet). Never invent incidents, numbers, clients or outcomes. No theme used in the last 14 days per log-he.md. Skip "צריך-פרט" ideas unless the owner supplied the fact. Mark the idea "נשלח לאישור <date>", then "פורסם <date>". If fewer than 6 unused ideas remain in the bank, add 5.
+
+## R - RTL (every post)
+
+Every line of the post starts with a Hebrew word - never an English term, a number, or a list marker followed by English ("גישת RDP..." not "RDP...", "חוק Any-Any..." not "Any-Any..."). The hashtag line may start with a Hebrew hashtag. Check each line with a script before showing the card.
+At publish time only: add U+200F (RLM) at the start of every non-empty line; on the hashtag line also put U+200E (LRM) directly before every hashtag that starts with a Latin letter (#SQLServer, #AI) so the # stays on the left of the word. Never show these marks in the card, and never save them in the Drive files.
+
+## I - Poster (every post)
+
+every post goes up with a poster, 1080x1350 (4:5). "אל תעשה AI SLOP... חי, יפה, מקצועי, צבעוני ולא AI". The poster must look like a designer at a magazine made it, not like a generated tech wallpaper.
+
+**Structure:** the bottom strip has a fixed structure on every poster so people recognise the owner in the feed - the owner's LinkedIn profile photo in a circle, <OWNER_NAME_HE>, <ROLE_LINE_HE>, and the source name + date on the other side. Everything changes from post to post: layout, colours, graphic, and the colours of the strip itself.
+The owner's photo: their own profile photo (any crop shape the style needs - circle, gradient ring, polaroid), taken at render time from the profile page in the Playwright browser (img whose src contains "profile-displayphoto-scale_400_400"), used as is. Never generate, retouch, restyle or cut out their face.
+
+**Design direction:** beautiful, varied, human-designed posters - Apple-style 3D and nine other styles, a different look every time, inspired by fresh designs from the web.
+
+**Style library - rotate, never the same style as either of the last 2 posters, use each before repeating one** (researched 22.11.2026: Creative Bloq, ManyPixels, Digital Synopsis - 2026 design trends):
+1. **Apple 3D** - keynote calm, light (#fff to #f5f5f7) or deep black, one glossy CSS-3D hero object (extruded tiles, 3D columns, rings, slabs), small grey pill eyebrow, second headline line in an Apple gradient, floating double-bezel signature card.
+2. **Stylised 3D sculpture** - one big clay-like or chrome 3D form (3D number, torus, sphere) on a flat bold colour field, matte lighting, soft contact shadow.
+3. **Bold minimalism** - one huge number or word, one strong colour + white/black, massive empty space, tiny aligned labels.
+4. **Editorial data viz** - magazine chart as hero (bars, dot matrix, timeline, waffle) with annotations and one highlighted series; serif headline (Frank Ruhl Libre).
+5. **Neo-brutalism** - raw grid, oversized black type, thick borders, hard offset shadows, clashing flat colours, a sticker.
+6. **Utilitarian signage** - warning-sign logic: safety yellow/black/orange, hazard stripe, numbered black panels, arrows, condensed type (Barlow Condensed for Latin). Good for security advisories.
+7. **Retro-future / Y2K chrome** - dark field, chrome or holographic lettering, neon grid floor, restrained scan-line glow. Good for new-model news.
+8. **Tactile collage / handmade** - kraft paper + SVG grain, torn paper strips (clip-path), tape, marker check marks and underlines, Amatic SC (has Hebrew) for hand notes, photo as a polaroid. Good for personal posts.
+9. **Soft-glow gradient** - luminous mesh gradient atmosphere, frosted panels, big light type.
+10. **Glitch accent** - clean layout with one controlled glitch/scan-line distortion on the key word or number. Good for attacks and incidents.
+
+**No repetition:** before each poster run 1-2 WebSearch calls for fresh inspiration (Apple product pages and keynote slides, Dribbble/Behance 3D infographics, strong LinkedIn creators) and take one concrete idea. Read the last 5 log lines; never repeat their style, 3D object, layout, palette or light/dark mode in a row. Write the style number and the borrowed idea into the log line. The text too: never repeat the hook, opening shape, closing-question pattern or recycled phrases of the last 3 posts.
+
+**Never:** robots, brains, padlocks, hooded hackers, circuit boards, stock photos, company logos, product screenshots, emoji, fake terminal windows as decoration, newspaper look, AI-slop wallpaper.
+
+**Always:**
+- One big Hebrew headline, up to 8 words (Heebo 800-900), with one accent (gradient line, marker highlight, black label). It carries the idea of the post, not a copy of line 1.
+- ONE real information graphic from this story's own facts (10 tiles for 10+ days, 50 tiles with 3 raised for 3 of 50, two 3D columns at the real ratio, 3 numbered panels for 3 real products). Countable and true - every number on the poster appears in the post and in the source.
+- Under ~35 words, generous margins (72px), Hebrew RTL, English terms inside `direction:ltr` elements, readable on a phone.
+- Check every Hebrew-facing font actually has Hebrew glyphs (Barlow/Plus Jakarta Sans/JetBrains Mono do not - use them only for Latin and numbers).
+
+**How to render:** build one self-contained HTML file. html/body 1080x1350 with overflow hidden, and all content inside one absolutely positioned 1080x1350 `.stage` with `direction:rtl` (putting dir="rtl" on html shifts the screenshot sideways). Render on the owner's computer with `browser_run_code_unsafe` from the LinkedIn tab: new page in the same context, setViewportSize 1080x1350, setContent(html, waitUntil networkidle), wait for document.fonts.ready, screenshot with clip 0,0,1080,1350 to <PLAYWRIGHT_OUTPUT_DIR>\<name>.png (the only folder the browser can upload from) and a second copy to <PICTURES_DIR>\<name>.png, close the page. Stage the Pictures copy, Read it yourself, and fix anything cut, overlapping, reversed or unreadable on a phone before the owner sees it. Send it with SendUserFile. If the owner's computer is unreachable, render in the cloud workspace without the photo and say so.
+Write the layout and palette used into the log line.
 
 ## H - Humanizer (every draft)
 
@@ -107,53 +190,59 @@ Step 2 - rewrite every flagged line yourself (the script never rewrites Hebrew g
 - מחק פתיחות "בעולם של היום/בימינו/בעידן הדיגיטלי", "חשוב לציין", סיכומים ("לסיכום"), פתיחות מתחנפות.
 - קשרים פורמליים (יתר על כן, לאור זאת, בהתאם לכך) -> אז, אבל, כי, אגב - או בלי קשר בכלל.
 - סביל ("ניתן לראות", "נמצא כי") -> פעיל עם מבצע: ראיתי, מצאנו.
-- התאמת מין בכל פועל/תואר/בינוני. Gal = זכר בגוף ראשון.
+- התאמת מין בכל פועל/תואר/בינוני. מגדר הכותב לפי voice-he.md (זכר/נקבה) בכל פועל בגוף ראשון.
 - גיוון אורך משפטים ופסקאות; פסקה של משפט אחד מותרת.
 - לא כל שם עצם עם ה' הידיעה. לא "של" כשסמיכות טבעית. לא שרשרת סמיכויות של 3+.
 - בלי "לא רק X אלא Y", "זה לא X, זה Y", "התוצאה?" כשורה לבד, שלישיות אוטומטיות.
 - בלי ניקוד. בלי קיר האשטגים. אימוג'י אחד לכל היותר, לא 🚀🔥💡✨🎯👇.
 - תואר שחוזר יותר מפעמיים (חשוב, משמעותי, ייחודי) -> להחליף או למחוק.
-Step 3 - save the rewrite to `final.txt`, run `python3 he_check.py final.txt`. Target PASS (70+, no check under 55). Fix the weakest check and rerun; 2 rounds is normal. After 4 rounds without PASS, the draft is formula - write a new one.
-Honesty: these are local heuristics, not GPTZero/Originality. Never tell Gal a text is "undetectable".
+Step 3 - save the rewrite to `final.txt`, run `python3 he_check.py final.txt`. Target 85+ overall, aim 90+, no check under 55. Fix the weakest check and rerun; 2 rounds is normal. After 4 rounds without PASS, the draft is formula - write a new one.
+Honesty: these are local heuristics, not GPTZero/Originality. Never tell the owner a text is "undetectable".
 
 ## P - Approval and publishing
 
-Show this card (Hebrew), with the post in a fenced block exactly as it will be published:
+Show this card (Hebrew), then the post in a fenced block exactly as it will be published, the image (SendUserFile), the source link for the first comment, and "לבדיקה שלך" with any line the owner should confirm:
 
 ```
 הפוסט מוכן
+נושא:        חדשות / בנק רעיונות (רעיון #)
 hook:        #17 עוגן זמן
 אורך:        1,140 תווים
 humanizer:   3 תיקונים אוטומטיים, ציון 84 PASS
-מומלץ לפרסם: יום שלישי 08:15
+פוסטר:       שורות השוואה, קרם+אדום+כחול (מצורף)
+שעת פרסום:   היום 12:41 (או "עכשיו")
 
-לפרסם עכשיו ללינקדאין? כתוב "כן" כדי לפרסם, או מה לשנות.
+לפרסם? כתוב "כן" כדי לפרסם בשעה הזאת, "עכשיו", או מה לשנות (טקסט / תמונה / שעה).
 ```
 
-On explicit yes for this exact text, publish with Playwright (`mcp__remote-devices__playwright__*`; load them with ToolSearch if deferred):
-1. `browser_navigate` https://www.linkedin.com/feed/?shareActive=true, then `browser_wait_for` ~5s. If the URL is a login/authwall page: tell Gal in Hebrew to sign in in the Playwright window, and stop.
-2. `browser_evaluate`: tag the editor - `[...document.querySelectorAll('[contenteditable=true]')].forEach((e,i)=>e.setAttribute('data-cl','po'+i))`.
-3. `browser_click` `[data-cl=po0]`, then `browser_type` into `[data-cl=po0]` with the approved text exactly.
-4. `browser_evaluate`: confirm the editor text starts with the first line and ends with the last line; tag the enabled button whose innerText is exactly "פוסט" as `data-cl=pub0`. `browser_take_screenshot` to check the audience chip says "פרסום לכל" (Anyone).
-5. `browser_click` `[data-cl=pub0]` ONCE. Never click it twice.
-6. `browser_navigate` https://www.linkedin.com/in/{{PROFILE_HANDLE}}/recent-activity/all/, wait ~5s, `browser_evaluate` that the first line appears exactly once. If not found, do NOT re-post - tell Gal and ask him to check (a double post is worse than a missing one).
-7. Report in Hebrew: פורסם + link. Add the line to `LinkedIn/log-he.md` (Drive can't append: rename the old file to "log-he (ישן).md" and create a new log-he.md with all old lines plus the new one).
-8. If Gal wants a specific time instead of now: create a one-time scheduled task that requires his computer, with the approved text verbatim and only these publishing steps.
+In an unattended run also send a short PushNotification in Hebrew. If the owner doesn't answer, do nothing.
+
+On explicit yes for this exact text and image, publish with Playwright (`mcp__remote-devices__playwright__*`; load them with ToolSearch if deferred). If the approved time is more than 10 minutes away, schedule it with send_later into this same session ("לפרסם את הפוסט המאושר") and publish when it fires; tell the owner the time. Never publish text or an image that changed after the approval.
+0. `browser_tabs` list and select the LinkedIn tab (rule 3); never use another tab.
+1. Image first: the Playwright browser can only upload files from its own output folder on the owner's computer (<PLAYWRIGHT_OUTPUT_DIR>). Recreate the PNG there: `browser_run_code_unsafe` - open a new page in the same context, setViewportSize 1080x1350, setContent(the approved image HTML), wait for document.fonts.ready, screenshot to that folder as <name>.png, close the page. For style 7 embed the owner's photo in the HTML as a data: URI.
+2. `browser_navigate` https://www.linkedin.com/feed/?shareActive=true, wait ~5s. If the URL is a login/authwall page: tell the owner in Hebrew to sign in in the Playwright window, and stop. Never type a password.
+3. Click the button with aria-label "מדיה", setInputFiles on input[type=file] with the PNG, click "הבא".
+4. `browser_evaluate`: tag the editor - `[...document.querySelectorAll('[contenteditable=true]')].forEach((e,i)=>e.setAttribute('data-cl','po'+i))`. `browser_click` `[data-cl=po0]`, then `browser_evaluate`: `el.focus(); document.execCommand('insertText', false, text)` with the approved text plus the marks from section R.
+5. `browser_evaluate`: confirm the editor text starts with the first line and ends with the hashtag line, the RLM count equals the number of non-empty lines, one 1080x1350 image is attached, and the audience button says "פרסום לכל אחד". Tag the enabled button whose innerText is exactly "פוסט" as `data-cl=pub0`.
+6. `browser_click` `[data-cl=pub0]` ONCE. Never click it twice.
+7. `browser_navigate` https://www.linkedin.com/in/<PROFILE_SLUG>/recent-activity/all/, wait ~5s, `browser_evaluate`: the first line appears exactly once, the text direction is rtl, and the three hashtags are links. If the post is not found, do NOT re-post - tell the owner and ask him to check (a double post is worse than a missing one). If the alignment or hashtags are wrong, edit once: post menu -> "עריכת פוסט", rebuild one line per paragraph with execCommand('insertText'), confirm the paragraph count is unchanged, "שמירה".
+8. Add the source as the first comment yourself: open the new post, write "מקור: <url>" in the comment box, send once, and confirm it appears once. Report in Hebrew: פורסם. Add the line to log-he.md (with hour and image style) and mark the idea "פורסם <date>" in ideas-he.md.
+9. If Playwright is unreachable or the owner's computer is off: tell the owner in Hebrew, keep the approved text and image, and stop. Don't try another route.
 
 ## P2 - Profile edits (after approval)
 
 Same Playwright session. Tag elements with `browser_evaluate` + `data-cl` attributes, then click/type them; verify after every save by reading the page back.
-- Headline: https://www.linkedin.com/in/{{PROFILE_HANDLE}}/edit/intro/ - the headline is the `[contenteditable=true]` inside the dialog; Ctrl+A, type, click button "שמירה". Max 220 chars.
-- About: https://www.linkedin.com/in/{{PROFILE_HANDLE}}/edit/forms/summary/new/ - the `[contenteditable]` with aria-label "אודות"; save old text first; type; "שמירה".
-- Position: https://www.linkedin.com/in/{{PROFILE_HANDLE}}/details/experience/ - find the link with aria-label "עריכת <role> ב-<company>", open it, the description is the `[contenteditable]` (max 2,000 chars); "שמירה".
-- Skill delete: https://www.linkedin.com/in/{{PROFILE_HANDLE}}/details/skills/ - link aria-label "עריכת כישור <name>" -> button "מחיקת מיומנות" -> confirm "מחיקה". Only skills Gal named.
+- Headline: https://www.linkedin.com/in/<PROFILE_SLUG>/edit/intro/ - the headline is the `[contenteditable=true]` inside the dialog; Ctrl+A, type, click button "שמירה". Max 220 chars.
+- About: https://www.linkedin.com/in/<PROFILE_SLUG>/edit/forms/summary/new/ - the `[contenteditable]` with aria-label "אודות"; save old text first; type; "שמירה".
+- Position: https://www.linkedin.com/in/<PROFILE_SLUG>/details/experience/ - find the link with aria-label "עריכת <role> ב-<company>", open it, the description is the `[contenteditable]` (max 2,000 chars); "שמירה".
+- Skill delete: https://www.linkedin.com/in/<PROFILE_SLUG>/details/skills/ - link aria-label "עריכת כישור <name>" -> button "מחיקת מיומנות" -> confirm "מחיקה". Only skills the owner named.
 - Never touch "פתוח/ה ל" / Open to Work, never click "לאמת עכשיו" / Premium upsells; close them with "לא עכשיו" or X.
-- After all edits: screenshot the profile top card and send Gal a short Hebrew summary table.
+- After all edits: screenshot the profile top card and send the owner a short Hebrew summary table.
 
-## V - voice-he.md template (build with Gal)
+## V - voice-he.md template (build with the owner)
 
 ```
-# קובץ סגנון - גל אסולין
+# קובץ סגנון - <OWNER_NAME_HE>
 ## מי אני: תפקיד / מה אני עושה במשפט אחד / למי אני כותב (ספציפי) / מה אני מוכר (אם בכלל)
 ## איך אני נשמע: 3 פוסטים/טקסטים שלי · מילים שאני משתמש בהן · מילים שלעולם לא · אורך משפטים · אימוג'י (אף פעם/אחד/חופשי) · כמה אנגלית מקצועית
 ## עמדות: 3-5 דברים שאני מאמין בהם ושחלק מהקהל לא מסכים
@@ -294,7 +383,6 @@ def render(label, text):
             "flags": [p for p, _, _ in sh] + [i for i, _, _ in st]}
 
 if __name__ == "__main__":
-    if hasattr(sys.stdout, "reconfigure"): sys.stdout.reconfigure(encoding="utf-8")  # Windows consoles default to cp1255
     a = sys.argv[1:]; path = next(x for x in a if not x.startswith("--"))
     text = sys.stdin.read() if path == "-" else open(path, encoding="utf-8").read()
     out = [render("לפני" if "--fix" in a else "טיוטה", text)]
